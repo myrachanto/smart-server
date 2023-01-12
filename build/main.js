@@ -9389,8 +9389,8 @@ async function findByUrl(req, res) {
 }
 async function createRecord(req, res) {
   let recordData = JSON.parse(req.body.product);
-  recordData.description = req.body.description;
-  console.log(recordData, 'record data'); // const images = req.files;
+  recordData.description = req.body.description; // console.log(recordData, 'record data');
+  // const images = req.files;
 
   try {
     const record = await Controller.create(recordData); // // save cover image
