@@ -2,24 +2,11 @@ import PropertyController from '../controller.js';
 import { handleErr, resize_save } from '../../helpers/index';
 import { randomString } from '../../helpers/common';
 
-const Controller = PropertyController('services');
-const Childservices = PropertyController('childservices');
+const Controller = PropertyController('childservices');
 
 export async function findAll(req, res) {
     try {
         const records = await Controller.find({});
-            for (var k=0; k<records.length; k++){
-                if (records[k].children.length > 0) {
-                let sizas = []
-                for ( let i= 0; i<records[k].children.length; i++){
-                    // console.log("------------step1", records[k].children[i]._id)
-                    let serv = await Childservices.findOne({ _id: records[k].children[i].id });
-                    // console.log("------------", serv)
-                    sizas.push(serv)
-                }
-                records[k].children = sizas;
-                }
-            }
         return res.send({ records, state: true });
     }
     catch (err) {

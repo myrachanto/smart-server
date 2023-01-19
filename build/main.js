@@ -7642,9 +7642,11 @@ server.listen(port, () => console.log(mymessage));
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./blog/model.js": "./src/app/blog/model.js",
+	"./articles/model.js": "./src/app/articles/model.js",
 	"./car-models/model.js": "./src/app/car-models/model.js",
 	"./categories/model.js": "./src/app/categories/model.js",
+	"./childservices/model.js": "./src/app/childservices/model.js",
+	"./comments/model.js": "./src/app/comments/model.js",
 	"./emails/model.js": "./src/app/emails/model.js",
 	"./flowers/model.js": "./src/app/flowers/model.js",
 	"./majorcategory/model.js": "./src/app/majorcategory/model.js",
@@ -7679,10 +7681,10 @@ webpackContext.id = "./src/app sync recursive ^\\.\\/.*\\/model\\.js$";
 
 /***/ }),
 
-/***/ "./src/app/blog/index.js":
-/*!*******************************!*\
-  !*** ./src/app/blog/index.js ***!
-  \*******************************/
+/***/ "./src/app/articles/index.js":
+/*!***********************************!*\
+  !*** ./src/app/articles/index.js ***!
+  \***********************************/
 /*! exports provided: findAll, findByUrl, createRecord, updateRecord */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -7698,10 +7700,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const Controller = Object(_controller_js__WEBPACK_IMPORTED_MODULE_0__["default"])('blog');
+const Controller = Object(_controller_js__WEBPACK_IMPORTED_MODULE_0__["default"])('articles');
 async function findAll(req, res) {
   try {
-    const records = await Controller.find({});
+    const records = await Controller.find({}); // console.log("---------", records[0])
+
     return res.send({
       records,
       state: true
@@ -7863,16 +7866,16 @@ async function updateRecord(req, res) {
 
 /***/ }),
 
-/***/ "./src/app/blog/model.js":
-/*!*******************************!*\
-  !*** ./src/app/blog/model.js ***!
-  \*******************************/
+/***/ "./src/app/articles/model.js":
+/*!***********************************!*\
+  !*** ./src/app/articles/model.js ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 var mongoose = __webpack_require__(/*! mongoose */ "mongoose");
 
-var BlogSchema = new mongoose.Schema({
+var ArticleSchema = new mongoose.Schema({
   title: {
     type: String
   },
@@ -7882,19 +7885,13 @@ var BlogSchema = new mongoose.Schema({
   h1: {
     type: String
   },
-  h2: {
+  meta: {
     type: String
   },
-  metaTitle: {
+  body: {
     type: String
   },
-  metaDescription: {
-    type: String
-  },
-  content: {
-    type: String
-  },
-  coverImage: {
+  image: {
     type: String
   },
   otherImages: {
@@ -7904,16 +7901,37 @@ var BlogSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true
+  },
+  keywords: {
+    type: Array
+  },
+  author: {
+    type: String
+  },
+  featured: {
+    type: Boolean
+  },
+  tags: {
+    type: Array
+  },
+  published: {
+    type: Boolean
+  },
+  altTag: {
+    type: String
+  },
+  created: {
+    type: Date
   }
 });
-module.exports = mongoose.model('Blog', BlogSchema);
+module.exports = mongoose.model('Article', ArticleSchema);
 
 /***/ }),
 
-/***/ "./src/app/blog/router.js":
-/*!********************************!*\
-  !*** ./src/app/blog/router.js ***!
-  \********************************/
+/***/ "./src/app/articles/router.js":
+/*!************************************!*\
+  !*** ./src/app/articles/router.js ***!
+  \************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7922,7 +7940,7 @@ const {
   findByUrl,
   createRecord,
   updateRecord
-} = __webpack_require__(/*! ./index.js */ "./src/app/blog/index.js");
+} = __webpack_require__(/*! ./index.js */ "./src/app/articles/index.js");
 
 const router = __webpack_require__(/*! express */ "express").Router();
 
@@ -8249,6 +8267,330 @@ router.route('/').get(findAll).post(createRecord);
 router.route('/:url').put(updateRecord) // .delete(removeMeta)
 .get(findByUrl);
 router.route('/majors/:url').get(findByMajorcategory); // router.route('/edit/:id')
+//     .put(editMeta);
+
+module.exports = router;
+
+/***/ }),
+
+/***/ "./src/app/childservices/index.js":
+/*!****************************************!*\
+  !*** ./src/app/childservices/index.js ***!
+  \****************************************/
+/*! exports provided: findAll, findByUrl, createRecord, updateRecord */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findAll", function() { return findAll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findByUrl", function() { return findByUrl; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createRecord", function() { return createRecord; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateRecord", function() { return updateRecord; });
+/* harmony import */ var _controller_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../controller.js */ "./src/app/controller.js");
+/* harmony import */ var _helpers_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/index */ "./src/helpers/index.js");
+/* harmony import */ var _helpers_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/common */ "./src/helpers/common.js");
+
+
+
+const Controller = Object(_controller_js__WEBPACK_IMPORTED_MODULE_0__["default"])('childservices');
+async function findAll(req, res) {
+  try {
+    const records = await Controller.find({});
+    return res.send({
+      records,
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+async function findByUrl(req, res) {
+  try {
+    const record = await Controller.findOne({
+      url: req.params.id
+    });
+    return res.send({
+      record,
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+async function createRecord(req, res) {
+  let recordData = JSON.parse(req.body.product);
+  recordData.description = req.body.description; // console.log(recordData, 'record data');
+  // const images = req.files;
+
+  try {
+    const record = await Controller.create(recordData); // // save cover image
+    // if (images && images.coverImage) {
+    //     //  measurements 680 X 680
+    //     const fileName = recordData.url + '-' + randomString();
+    //     resize_save({ file: images.coverImage, fileName: fileName, width: null, height: null }, 'uploads/services');
+    //     const updated = await Controller.update({ coverImage: `${fileName}.webp` }, record._id);
+    // }
+    // // end
+    // // other images
+    // if (req.files && req.files['otherImages']) {
+    //     const otherImages = req.files.otherImages;
+    //     const file_paths = [];
+    //     if (typeof (otherImages.name) !== 'undefined') {
+    //         const fileName = recordData.url + '-' + randomString();
+    //         const filepath = `${fileName}.webp`
+    //         file_paths.push(filepath);
+    //         resize_save({ file: images.otherImages, fileName: fileName, width: null, height:null }, 'uploads/services');
+    //     } else {
+    //         for (const file of otherImages) {
+    //             const fileName = recordData.url + '-' + randomString();
+    //             const filepath = `${fileName}.webp`
+    //             file_paths.push(filepath);
+    //             resize_save({ file: file, fileName: fileName, width: null, height:null }, 'uploads/services');
+    //         };
+    //     }
+    //     // update database
+    //     const updated_property = await Controller.update({ otherImages: file_paths }, record._id);
+    //     // end of database
+    // }
+    // end of other images
+
+    return res.send({
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+async function updateRecord(req, res) {
+  try {
+    let recordData = JSON.parse(req.body.product);
+    recordData.description = req.body.description; // console.log(">>>>>>>>>>>>>>>>>>>è", recordData,req.params.id)
+    // const images = req.otherImages;
+
+    const record = await Controller.update(recordData, recordData._id); // if (images && images.coverImage) {
+    //     //  measurements 680 X 680
+    //     // console.log(">>>>>>>>>>>>> level 1" )
+    //     const fileName = record.url + '-' + randomString();
+    //     // console.log(">>>>>>>>>>>>> level 2" )
+    //     resize_save({ file: images.coverImage, fileName: fileName, width: null, height: null }, 'uploads/logos');
+    //     const updated = await Controller.update({ coverImage: `${fileName}.webp` }, record._id);
+    // }
+
+    return res.send({
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+
+/***/ }),
+
+/***/ "./src/app/childservices/model.js":
+/*!****************************************!*\
+  !*** ./src/app/childservices/model.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var mongoose = __webpack_require__(/*! mongoose */ "mongoose");
+
+var ChildserviceSchema = new mongoose.Schema({
+  name: {
+    type: String
+  },
+  title: {
+    type: String
+  },
+  metaDescription: {
+    type: String
+  },
+  description: {
+    type: String
+  },
+  majors: {
+    type: String
+  },
+  h1: {
+    type: String
+  },
+  url: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  rating: {
+    type: Array
+  },
+  tags: {
+    type: Array
+  },
+  others: {
+    type: Array
+  }
+});
+module.exports = mongoose.model('Childservice', ChildserviceSchema);
+
+/***/ }),
+
+/***/ "./src/app/childservices/router.js":
+/*!*****************************************!*\
+  !*** ./src/app/childservices/router.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const {
+  findAll,
+  findByUrl,
+  createRecord,
+  updateRecord
+} = __webpack_require__(/*! ./index.js */ "./src/app/childservices/index.js");
+
+const router = __webpack_require__(/*! express */ "express").Router();
+
+router.route('/').get(findAll).post(createRecord);
+router.route('/:id').put(updateRecord) // .delete(removeMeta)
+.get(findByUrl); // router.route('/edit/:id')
+//     .put(editMeta);
+
+module.exports = router;
+
+/***/ }),
+
+/***/ "./src/app/comments/index.js":
+/*!***********************************!*\
+  !*** ./src/app/comments/index.js ***!
+  \***********************************/
+/*! exports provided: findAll, findByUrl, createRecord, updateRecord, deleteRecord */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findAll", function() { return findAll; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findByUrl", function() { return findByUrl; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createRecord", function() { return createRecord; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateRecord", function() { return updateRecord; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteRecord", function() { return deleteRecord; });
+/* harmony import */ var _controller_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../controller.js */ "./src/app/controller.js");
+/* harmony import */ var _helpers_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../helpers/index */ "./src/helpers/index.js");
+/* harmony import */ var _helpers_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../helpers/common */ "./src/helpers/common.js");
+
+
+
+const Controller = Object(_controller_js__WEBPACK_IMPORTED_MODULE_0__["default"])('comments');
+async function findAll(req, res) {
+  try {
+    const records = await Controller.find({});
+    return res.send({
+      records,
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+async function findByUrl(req, res) {
+  try {
+    const record = await Controller.findOne({
+      url: req.params.id
+    });
+    return res.send({
+      record,
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+async function createRecord(req, res) {
+  let recordData = JSON.parse(req.body.product);
+
+  try {
+    const record = await Controller.create(recordData); // save cover image
+    // end
+
+    return res.send({
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+async function updateRecord(req, res) {
+  let recordData = JSON.parse(req.body.product);
+
+  try {
+    const record = await Controller.update(recordData, req.params.id); // save cover image
+    // end
+
+    return res.send({
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+async function deleteRecord(req, res) {
+  try {
+    const records = await Controller.remove(req.params.id);
+    return res.send({
+      records,
+      state: true
+    });
+  } catch (err) {
+    Object(_helpers_index__WEBPACK_IMPORTED_MODULE_1__["handleErr"])(res, err);
+  }
+}
+
+/***/ }),
+
+/***/ "./src/app/comments/model.js":
+/*!***********************************!*\
+  !*** ./src/app/comments/model.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var mongoose = __webpack_require__(/*! mongoose */ "mongoose");
+
+var CommentSchema = new mongoose.Schema({
+  name: {
+    type: String
+  },
+  email: {
+    type: String
+  },
+  website: {
+    type: String
+  },
+  message: {
+    type: String
+  }
+});
+module.exports = mongoose.model('Comment', CommentSchema);
+
+/***/ }),
+
+/***/ "./src/app/comments/router.js":
+/*!************************************!*\
+  !*** ./src/app/comments/router.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const {
+  findAll,
+  findByUrl,
+  createRecord,
+  updateRecord,
+  deleteRecord
+} = __webpack_require__(/*! ./index.js */ "./src/app/comments/index.js");
+
+const router = __webpack_require__(/*! express */ "express").Router();
+
+router.route('/').get(findAll).post(createRecord);
+router.route('/:id').put(updateRecord).delete(deleteRecord).get(findByUrl); // router.route('/edit/:id')
 //     .put(editMeta);
 
 module.exports = router;
@@ -9363,9 +9705,28 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Controller = Object(_controller_js__WEBPACK_IMPORTED_MODULE_0__["default"])('services');
+const Childservices = Object(_controller_js__WEBPACK_IMPORTED_MODULE_0__["default"])('childservices');
 async function findAll(req, res) {
   try {
     const records = await Controller.find({});
+
+    for (var k = 0; k < records.length; k++) {
+      if (records[k].children.length > 0) {
+        let sizas = [];
+
+        for (let i = 0; i < records[k].children.length; i++) {
+          // console.log("------------step1", records[k].children[i]._id)
+          let serv = await Childservices.findOne({
+            _id: records[k].children[i].id
+          }); // console.log("------------", serv)
+
+          sizas.push(serv);
+        }
+
+        records[k].children = sizas;
+      }
+    }
+
     return res.send({
       records,
       state: true
@@ -9469,7 +9830,7 @@ var ServiceSchema = new mongoose.Schema({
   name: {
     type: String
   },
-  coverImage: {
+  image: {
     type: String
   },
   category: {
@@ -9494,6 +9855,9 @@ var ServiceSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true
+  },
+  children: {
+    type: Array
   }
 });
 module.exports = mongoose.model('Service', ServiceSchema);
@@ -10228,7 +10592,7 @@ const ProjectsRoutes = __webpack_require__(/*! ../../app/projects/router.js */ "
 
 const ServicesRoutes = __webpack_require__(/*! ../../app/services/router.js */ "./src/app/services/router.js");
 
-const BlogRoutes = __webpack_require__(/*! ../../app/blog/router.js */ "./src/app/blog/router.js");
+const BlogRoutes = __webpack_require__(/*! ../../app/articles/router.js */ "./src/app/articles/router.js");
 
 const SliderRoutes = __webpack_require__(/*! ../../app/slider/router.js */ "./src/app/slider/router.js");
 
@@ -10246,6 +10610,10 @@ const SeoRoutes = __webpack_require__(/*! ../../app/seo/router.js */ "./src/app/
 
 const MajorcategoryRoutes = __webpack_require__(/*! ../../app/majorcategory/router.js */ "./src/app/majorcategory/router.js");
 
+const ChildservicesRoutes = __webpack_require__(/*! ../../app/childservices/router.js */ "./src/app/childservices/router.js");
+
+const CommentsRoutes = __webpack_require__(/*! ../../app/comments/router.js */ "./src/app/comments/router.js");
+
 module.exports = function (app) {
   app.use('/api/emails', EmailRoutes);
   app.use('/api/products', ProductsRoutes);
@@ -10259,6 +10627,8 @@ module.exports = function (app) {
   app.use('/api/years', YearRoutes);
   app.use('/api/seo', SeoRoutes);
   app.use('/api/majorcategory', MajorcategoryRoutes);
+  app.use('/api/childservices', ChildservicesRoutes);
+  app.use('/api/comments', CommentsRoutes);
 };
 
 /***/ }),
