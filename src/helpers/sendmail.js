@@ -17,11 +17,11 @@ export function SendEmail(data) {
 
   const mainOptions = {
     from: `"${data.title}" ${emailUser}`,
-    to: "marketing@rainbow-bouquets.com",
+    to: "info@smartsmiledentalclinics.co.ke",
     subject: data.subject,
     text: data.content
   };
-  //  console.log('html data ======================>', mainOptions.html)
+  //  console.log('html data ======================>', mainOptions)
    transporter.sendMail(mainOptions, function (err, info) {
     if (err) {
       console.log(err);

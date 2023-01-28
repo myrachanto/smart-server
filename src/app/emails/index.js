@@ -38,11 +38,38 @@ export async function createRecord(req, res) {
         
         Message: ${data.message}
 
-        Date ${new Date()}`;
+        Dated: ${data.dated}
+        `;
 
-    const subject = `Website Enquiry From: ${data.name} - (${data.phone})`;
+    const subject = `Booking appointment : ${data.name} - (${data.phone})`;
     const title = subject;
 
+    SendEmail({ content: content, subject: subject, title: title })
+    return res.send({ state: true, ResultDesc: 1200 });
+    }
+    catch (err) {
+        handleErr(res, err);
+    }
+}
+
+export async function createRecord2(req, res) {
+    let data = req.body;
+ 
+    try {
+        const content = `
+        From: ${data.name} 
+        
+        Phone Number: ${data.phone}
+
+        Email: ${data.email || 'Not Filled'} 
+        
+        Message: ${data.message}
+
+        Date ${new Date()}`;
+
+    const subject = `Query from : ${data.name} - (${data.phone})`;
+    const title = subject;
+    
     SendEmail({ content: content, subject: subject, title: title })
     return res.send({ state: true, ResultDesc: 1200 });
     }
