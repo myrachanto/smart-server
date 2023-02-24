@@ -1,4 +1,4 @@
-const  { findAll, findByUrl, createRecord,updateRecord } = require('./index.js');
+const  { findAll, findByUrl, createRecord,updateRecord, deleteRecord, deleteCategory } = require('./index.js');
 const router = require('express').Router();
 
 router.route('/')
@@ -7,10 +7,10 @@ router.route('/')
 
 router.route('/:id')
     .put(updateRecord)
-    // .delete(removeMeta)
+    .delete(deleteRecord)
     .get(findByUrl);
 
-// router.route('/edit/:id')
-//     .put(editMeta);
+router.route('/delete/category/:id')
+    .delete(deleteCategory);
 
 module.exports = router;

@@ -1,14 +1,13 @@
-const  { findAll, findByUrl, createRecord,createRecord2 } = require('./index.js');
+const  { findAll, findByUrl, createRecord,updateRecord,deleteRecord } = require('./index.js');
 const router = require('express').Router();
 
 router.route('/')
     .get(findAll)
     .post(createRecord);
-router.route('/contact').post(createRecord2);
 
-router.route('/:url')
-    // .put(editMeta)
-    // .delete(removeMeta)
+router.route('/:id')
+    .put(updateRecord)
+    .delete(deleteRecord)
     .get(findByUrl);
 
 // router.route('/edit/:id')

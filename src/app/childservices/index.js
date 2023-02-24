@@ -2,43 +2,11 @@ import PropertyController from '../controller.js';
 import { handleErr, resize_save } from '../../helpers/index';
 import { randomString } from '../../helpers/common';
 
-const Controller = PropertyController('services');
-const Childservices = PropertyController('childservices');
-
-export async function deleteRecord(req, res) {
-    try {
-
-        const record = await Childservices.remove(req.params.id);
-        return res.send({ record, state: true });
-    } catch (err) {
-        handleErr(res, err);
-    }
-}
-
-export async function deleteCategory(req, res) {
-    try {
-        const record = await Controller.remove(req.params.id);
-        return res.send({ record, state: true });
-    } catch (err) {
-        handleErr(res, err);
-    }
-}
+const Controller = PropertyController('childservices');
 
 export async function findAll(req, res) {
     try {
         const records = await Controller.find({});
-        for (var k = 0; k < records.length; k++) {
-            if (records[k].children.length > 0) {
-                let sizas = []
-                for (let i = 0; i < records[k].children.length; i++) {
-                    // console.log("------------step1", records[k].children[i]._id)
-                    let serv = await Childservices.findOne({ _id: records[k].children[i].id });
-                    // console.log("------------", serv)
-                    sizas.push(serv)
-                }
-                records[k].children = sizas;
-            }
-        }
         return res.send({ records, state: true });
     }
     catch (err) {
@@ -48,7 +16,7 @@ export async function findAll(req, res) {
 
 export async function findByUrl(req, res) {
     try {
-        const record = await Controller.findOne({ url: req.params.id });
+        const record = await Controller.findOne({ url: req.params.id});
         return res.send({ record, state: true });
     }
     catch (err) {
@@ -57,7 +25,7 @@ export async function findByUrl(req, res) {
 }
 
 export async function createRecord(req, res) {
-    let recordData = JSON.parse(req.body.product);
+    let recordData = JSON.parse(req.body.service);
     recordData.description = req.body.description;
     // console.log(recordData, 'record data');
     // const images = req.files;
@@ -98,15 +66,15 @@ export async function createRecord(req, res) {
         return res.send({ state: true });
     }
     catch (err) {
+        console.log(err);
         handleErr(res, err);
     }
 }
 export async function updateRecord(req, res) {
     try {
-        let recordData = JSON.parse(req.body.product);
+        let recordData = JSON.parse(req.body.service);
         recordData.description = req.body.description;
-        // console.log(">>>>>>>>>>>>>>>>>>>è", recordData,req.params.id)
-        // const images = req.otherImages;
+
         const record = await Controller.update(recordData, recordData._id);
         // if (images && images.coverImage) {
         //     //  measurements 680 X 680
@@ -119,6 +87,7 @@ export async function updateRecord(req, res) {
         return res.send({ state: true });
     }
     catch (err) {
+        console.log(err);
         handleErr(res, err);
     }
 }
