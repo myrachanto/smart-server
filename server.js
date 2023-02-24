@@ -14,7 +14,8 @@ const mongoose = require('mongoose');
 //    useCreateIndex: true,
 //    useNewUrlParser: true
 //   });
-  mongoose.connect("mongodb://127.0.0.1:27017/smartsmile", {
+  mongoose.connect("mongodb://127.0.0.1:27017/smart", {
+    // mongoose.connect("mongodb://127.0.0.1:27017/smartsmile", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

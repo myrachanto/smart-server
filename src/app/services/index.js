@@ -23,22 +23,32 @@ export async function deleteCategory(req, res) {
         handleErr(res, err);
     }
 }
-
 export async function findAll(req, res) {
     try {
         const records = await Controller.find({});
-        for (var k = 0; k < records.length; k++) {
-            if (records[k].children.length > 0) {
-                let sizas = []
-                for (let i = 0; i < records[k].children.length; i++) {
-                    // console.log("------------step1", records[k].children[i]._id)
-                    let serv = await Childservices.findOne({ _id: records[k].children[i].id });
-                    // console.log("------------", serv)
-                    sizas.push(serv)
-                }
-                records[k].children = sizas;
-            }
+        // 63d80dc55b89ec2d4c4b9901
+        //63d8ccf11a9687519e2aa266
+        // 5f3374a84c68e760e3390547
+        return res.send({ records, state: true });
+    }
+    catch (err) {
+        handleErr(res, err);
+    }
+}
+export async function findAll1(req, res) {
+    try {
+        const records = await Controller.find({});
+        const children = await Childservices.find({});
+        // console.log("--------------step records",records[0], children[0] )
+        const length =records.length
+        console.log("--------------step records",length )
+        for (let k = 0; k < records.length; k++) {
+            records[k].children = children.filter(i => {
+               return i.majors == records[k].url
+            })
         }
+        console.log("-------+++++++++++++", records)
+
         return res.send({ records, state: true });
     }
     catch (err) {

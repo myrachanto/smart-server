@@ -3,6 +3,7 @@ import { handleErr, resize_save } from '../../helpers/index';
 import { randomString } from '../../helpers/common';
 
 const Controller = PropertyController('childservices');
+const ServiceController = PropertyController('services');
 
 export async function findAll(req, res) {
     try {

@@ -1,10 +1,11 @@
-const  { findAll, findByUrl, createRecord,updateRecord, deleteRecord, deleteCategory } = require('./index.js');
+const  { findAll, findByUrl, createRecord,updateRecord, deleteRecord, deleteCategory,findAll1 } = require('./index.js');
 const router = require('express').Router();
 
 router.route('/')
     .get(findAll)
     .post(createRecord);
 
+router.route('/navs').get(findAll1);
 router.route('/:id')
     .put(updateRecord)
     .delete(deleteRecord)
