@@ -29,6 +29,7 @@ export async function queryMenus(req, res) {
             menus.push(details);
 
         }
+        // console.log("++++++++++++++++++", menus)
 
         return res.send({ menus, state: true });
     }
